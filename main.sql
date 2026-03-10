@@ -20,8 +20,10 @@ CREATE TABLE IF NOT EXISTS `addresses` (
 
 CREATE TABLE IF NOT EXISTS `user_addresses` (
     `user_address_id` INT AUTO_INCREMENT PRIMARY KEY,
-    `user_id` INT, FOREIGN KEY (user_id) REFERENCES users(user_id),
-    `address_id` INT, FOREIGN KEY (address_id) REFERENCES addresses(address_id)
+    `user_id` INT NOT NULL,
+    `address_id` INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (address_id) REFERENCES addresses(address_id)
 );
 
 CREATE TABLE IF NOT EXISTS `orders` (
@@ -35,11 +37,11 @@ CREATE TABLE IF NOT EXISTS `orders` (
 
 CREATE TABLE IF NOT EXISTS `deliveries` (
     `delivery_id` INT AUTO_INCREMENT PRIMARY KEY,
-    `user_id` INT, FOREIGN KEY (user_id) REFERENCES users(user_id),
-    `address_id` INT, FOREIGN KEY (address_id) REFERENCES addresses(address_id),
-    `order_id` INT, FOREIGN KEY (order_id) REFERENCES orders(order_id)
+    `user_address_id` INT,
+    `order_id` INT,
+    FOREIGN KEY (user_address_id) REFERENCES user_addresses(user_address_id),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
-
 
 INSERT INTO users (first_name, last_name, email, password) VALUES
 ('Devon', 'Curry', 'devoncurrypiano@gmail.com', 'HTMLmnop2025'),
@@ -51,7 +53,7 @@ INSERT INTO users (first_name, last_name, email, password) VALUES
 INSERT INTO addresses (street, city, state, zip_code) VALUES
 ('27 Trejo St', 'Rexburg', 'ID', '83440'),
 ('750 S 2nd E', 'Rexburg', 'ID', '83440'),
-('211 E Elm St', 'Boise', 'ID', '83646')
+('211 E Elm St', 'Boise', 'ID', '83646'),
 ('149 Elm St', 'Staten Island', 'NY', '10310'),
 ('127 5th Ave', 'San Francisco', 'CA', '94118'),
 ('345 S 2nd E', 'Rexburg', 'ID', '83440'),
@@ -77,16 +79,14 @@ INSERT INTO orders (user_id, item, quantity, order_date, status) VALUES
 (3, 'Protein Powder', 1, '2026-03-04 14:42:00', 'Delivered'),
 (4, 'Photo Prints', 18, '2026-03-06 09:14:00', 'Processing'),
 (5, 'Laptop', 1, '2026-03-07 16:20:00', 'Processing'),
-(6, 'Dish Soap', 2, '2026-03-07 23:04:00', 'Shipping'),
-(7, 'Drier Sheets', 1, '2026-03-07 23:38:00', 'Processing');
+(2, 'Dish Soap', 2, '2026-03-07 23:04:00', 'Shipping'),
+(5, 'Drier Sheets', 1, '2026-03-07 23:38:00', 'Processing');
 
-INSERT INTO deliveries (user_id, address_id, order_id) VALUES
-(2, 2, 2),
-(2, 2, 6),
-(2, 4, 7),
-(3, 5, 1),
-(4, 6, 3),
-(5, 7, 4),
-(5, 8, 5);
-
-
+INSERT INTO deliveries (user_address_id, order_id) VALUES
+(1, 1),
+(2, 2),
+(6, 3),
+(8, 4),
+(10, 5),
+(5, 6),
+(9, 7);
